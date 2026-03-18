@@ -1,0 +1,21 @@
+{
+  "name": "claude-models",
+  "version": "1.0.0",
+  "description": "TUI program to load and test Claude API configurations",
+  "main": "index.js",
+  "bin": {
+    "claude-models": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["claude", "api", "tui", "configuration"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^9.2.12",
+    "axios": "^1.6.7",
+    "chalk": "^4.1.2"
+  },
+  "type": "module"
+}

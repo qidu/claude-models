@@ -1,0 +1,11 @@
+#export ANTHROPIC_BASE_URL=https://api.qnaigc.com
+export ANTHROPIC_BASE_URL=http://anthropic.qnaigc.com
+#export ANTHROPIC_BASE_URL=http://localhost:8788
+#export ANTHROPIC_AUTH_TOKEN=sk-17ac71ed56aee29a***
+export ANTHROPIC_AUTH_TOKEN=WELCOME_TO_USE_THIS_PUBLIC_FREE_KEY_ON_YOUR_CLAW
+unset ANTHROPIC_API_KEY
+#export ANTHROPIC_MODEL=minimax/minimax-m2.5
+#export ANTHROPIC_MODEL=hunter-free
+export ANTHROPIC_MODEL=stepfun/step-flash-free
+#export ANTHROPIC_MODEL=deepseek/deepseek-v3.2-251201
+export API_TIMEOUT_MS=400000
