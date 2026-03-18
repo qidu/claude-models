@@ -119,7 +119,7 @@ class IntegratedClaudeModels {
       const choice = await this.question(`Select (1-${this.config.authTokens.length}) [1]: `) || '1';
       this.selected.authToken = this.config.authTokens[parseInt(choice) - 1] || this.config.authTokens[0];
     } else {
-      this.selected.authToken = await this.question('Auth Token: ') || 'sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348';
+      this.selected.authToken = await this.question('Auth Token: ') || 'sk-2dd63001b32cf7d9***';
     }
     
     // Model

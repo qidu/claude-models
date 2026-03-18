@@ -44,7 +44,7 @@ The program reads shell-style configuration files like `claude-models.txt`:
 
 ```bash
 export ANTHROPIC_BASE_URL=https://api.qnaigc.com
-export ANTHROPIC_AUTH_TOKEN=sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348
+export ANTHROPIC_AUTH_TOKEN=sk-2dd63001b32cf7d9***
 export ANTHROPIC_MODEL=minimax/minimax-m2.5
 #export ANTHROPIC_SMALL_FAST_MODEL=minimax/minimax-m2.1
 export API_TIMEOUT_MS=600000

@@ -4,7 +4,7 @@ console.log('=== API Test Request/Response Details ===\n');
 
 // Simulate the exact request that would be sent
 const baseUrl = 'https://api.qnaigc.com';
-const authToken = 'sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348';
+const authToken = 'sk-2dd63001b32cf7d9***';
 const model = 'minimax/minimax-m2.5';
 
 console.log('REQUEST DETAILS:');

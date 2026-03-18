@@ -80,7 +80,7 @@ lines.forEach(line => {
 // Simple selection (choose first option for each)
 const selectedChoices = {
   baseUrl: config.baseUrls[0] || 'https://api.qnaigc.com',
-  authToken: config.authTokens[0] || 'sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348',
+  authToken: config.authTokens[0] || 'sk-2dd63001b32cf7d9***',
   model: config.models[0] || 'minimax/minimax-m2.5',
   smallFastModel: config.smallFastModels[0] || null,
   timeout: config.timeouts[0] || '600000'

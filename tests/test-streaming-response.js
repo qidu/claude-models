@@ -6,7 +6,7 @@ console.log('=== Testing Streaming API Response ===\n');
 
 const config = {
   baseUrl: 'https://api.qnaigc.com',
-  authToken: 'sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348',
+  authToken: 'sk-2dd63001b32cf7d9***',
   model: 'minimax/minimax-m2.5'
 };
 

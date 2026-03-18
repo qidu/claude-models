@@ -391,11 +391,13 @@ class ClaudeModelsTUI {
         let rawResponse = '';
         response.data.on('data', (chunk) => {
           rawResponse += chunk.toString();
-          console.log(chalk.green(chunk.toString()));
+        //  console.log(chalk.green(chunk.toString()));
         });
-        // console.log(chalk.green(rawResponse));
 
         response.data.on('end', () => {
+          // Write raw response to file
+          fs.writeFileSync('/tmp/test-response.txt', rawResponse);
+          console.log(chalk.cyan('\nResponse saved to /tmp/test-response.txt'));
           resolve(true);
         });
 

@@ -24,7 +24,7 @@ async function main() {
   
   let config = {
     baseUrls: ['https://api.qnaigc.com'],
-    authTokens: ['sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348'],
+    authTokens: ['sk-2dd63001b32cf7d9***'],
     models: ['minimax/minimax-m2.5'],
     timeouts: ['600000']
   };

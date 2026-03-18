@@ -154,7 +154,7 @@ class EnhancedClaudeModelsTUI {
         type: 'input',
         name: 'authToken',
         message: 'Enter ANTHROPIC_AUTH_TOKEN:',
-        default: 'sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348'
+        default: 'sk-2dd63001b32cf7d9***'
       });
     }
     
