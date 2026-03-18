@@ -1,0 +1,19 @@
+# Test config with TIMEOUT options
+
+export ANTHROPIC_BASE_URL=https://api.qnaigc.com
+# ANTHROPIC_BASE_URL=https://anthropic.qnaigc.com
+ANTHROPIC_BASE_URL=http://localhost:8788
+
+export ANTHROPIC_AUTH_TOKEN=sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348
+ANTHROPIC_AUTH_TOKEN=WELCOME_TO_USE_THIS_PUBLIC_FREE_KEY_ON_YOUR_CLAW
+# ANTHROPIC_AUTH_TOKEN=sk-test-token
+
+export ANTHROPIC_MODEL=minimax/minimax-m2.5
+ANTHROPIC_MODEL=hunter-alpha
+# export ANTHROPIC_MODEL=stepfun/step-flash-free
+
+# TIMEOUT options
+export API_TIMEOUT_MS=600000
+API_TIMEOUT_MS=300000
+# TIMEOUT=100000
+TIMEOUT=50000

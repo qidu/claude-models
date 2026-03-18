@@ -1,0 +1,35 @@
+# Various formats for testing
+
+# Standard export
+export ANTHROPIC_BASE_URL=https://api.qnaigc.com
+
+# Without export
+ANTHROPIC_BASE_URL=https://anthropic.qnaigc.com
+
+# Commented but contains ENV
+# export ANTHROPIC_BASE_URL=http://localhost:8788
+
+# Another commented format
+# ANTHROPIC_BASE_URL=http://localhost:9999
+
+# Token examples
+export ANTHROPIC_AUTH_TOKEN=sk-2dd63001b32cf7d9186be3d6673eedb3005a0dcfa6b0be1d00c6395173f4e348
+ANTHROPIC_AUTH_TOKEN=WELCOME_TO_USE_THIS_PUBLIC_FREE_KEY_ON_YOUR_CLAW
+# export ANTHROPIC_AUTH_TOKEN=sk-commented-token-12345
+
+# Model examples
+export ANTHROPIC_MODEL=minimax/minimax-m2.5
+ANTHROPIC_MODEL=hunter-alpha
+# export ANTHROPIC_MODEL=stepfun/step-flash-free
+
+# Small fast model examples
+export ANTHROPIC_SMALL_FAST_MODEL=minimax/minimax-m2.1
+# ANTHROPIC_SMALL_FAST_MODEL=deepseek/deepseek-v3.2-251201
+
+# Lines with trailing comments
+export ANTHROPIC_BASE_URL=https://backup.example.com # backup server
+ANTHROPIC_AUTH_TOKEN=sk-test-with-comment # test token
+
+# Just URLs in comments
+# https://random-url.com
+# http://another-url.org
