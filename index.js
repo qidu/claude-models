@@ -247,62 +247,82 @@ class ClaudeModelsTUI {
       let content = fs.readFileSync(this.configFilePath, 'utf8');
       const lines = content.split('\n');
       const newLines = [];
-      let hasTimeout = false;
+      const varsToSet = {
+        'ANTHROPIC_BASE_URL': this.selectedConfig.baseUrl,
+        'ANTHROPIC_AUTH_TOKEN': this.selectedConfig.authToken,
+        'ANTHROPIC_MODEL': this.selectedConfig.model,
+        'API_TIMEOUT_MS': this.selectedConfig.timeout.toString()
+      };
+      const foundVars = new Set();
 
       for (const line of lines) {
         const trimmed = line.trim();
 
-        // ANTHROPIC_BASE_URL - comment existing, add new if modified
-        if (trimmed.includes('ANTHROPIC_BASE_URL=') && trimmed.startsWith('export ')) {
-          if (trimmed.includes(this.selectedConfig.baseUrl)) {
-            newLines.push(trimmed.startsWith('#') ? trimmed.slice(1).trim() : trimmed);
+        // Skip empty lines
+        if (!trimmed) {
+          newLines.push(line);
+          continue;
+        }
+
+        const isCommented = trimmed.startsWith('#');
+        const uncommentedLine = isCommented ? trimmed.slice(1).trim() : trimmed;
+        const startsWithExport = uncommentedLine.startsWith('export ');
+
+        // Check if this line defines one of our variables
+        let matchedVar = null;
+        let matchedValue = null;
+        for (const varName of Object.keys(varsToSet)) {
+          // Match patterns like "export VAR=value" or "VAR=value"
+          const pattern = new RegExp(`^(export\\s+)?${varName}=(.+)$`);
+          const match = uncommentedLine.match(pattern);
+          if (match) {
+            matchedVar = varName;
+            matchedValue = match[2].trim().split('#')[0].trim(); // Get value part, strip trailing comments
+            break;
+          }
+        }
+
+        if (matchedVar && startsWithExport) {
+          foundVars.add(matchedVar);
+          const selectedValue = varsToSet[matchedVar];
+          const isSelected = matchedValue === selectedValue;
+
+          // Reconstruct the line based on selection
+          const withoutPrefix = uncommentedLine.replace(/^export\s+/, '');
+          const parts = withoutPrefix.split('#');
+          const varAssignmentBase = matchedVar;
+
+          if (isSelected) {
+            // Selected choice: ensure no leading "#"
+            const varAssignment = `${varAssignmentBase}=${selectedValue}`;
+            if (parts.length > 1) {
+              const comment = parts.slice(1).join('#').trim();
+              newLines.push(`export ${varAssignment} # ${comment}`);
+            } else {
+              newLines.push(`export ${varAssignment}`);
+            }
           } else {
-            newLines.push('#' + trimmed);
-            newLines.push(`export ANTHROPIC_BASE_URL=${this.selectedConfig.baseUrl}`);
+            // Unselected choice: add leading "#" if not already commented
+            const varAssignment = `${varAssignmentBase}=${matchedValue}`;
+            if (parts.length > 1) {
+              const comment = parts.slice(1).join('#').trim();
+              newLines.push(`#export ${varAssignment} # ${comment}`);
+            } else {
+              newLines.push(`#export ${varAssignment}`);
+            }
           }
           continue;
         }
 
-        // ANTHROPIC_AUTH_TOKEN - comment existing, add new if modified
-        if (trimmed.includes('ANTHROPIC_AUTH_TOKEN=') && trimmed.startsWith('export ')) {
-          if (trimmed.includes(this.selectedConfig.authToken)) {
-            newLines.push(trimmed.startsWith('#') ? trimmed.slice(1).trim() : trimmed);
-          } else {
-            newLines.push('#' + trimmed);
-            newLines.push(`export ANTHROPIC_AUTH_TOKEN=${this.selectedConfig.authToken}`);
-          }
-          continue;
-        }
-
-        // ANTHROPIC_MODEL - comment existing, add new if modified
-        if (trimmed.includes('ANTHROPIC_MODEL=') && trimmed.startsWith('export ')) {
-          if (trimmed.includes(this.selectedConfig.model)) {
-            newLines.push(trimmed.startsWith('#') ? trimmed.slice(1).trim() : trimmed);
-          } else {
-            newLines.push('#' + trimmed);
-            newLines.push(`export ANTHROPIC_MODEL=${this.selectedConfig.model}`);
-          }
-          continue;
-        }
-
-        // API_TIMEOUT_MS - comment existing, add new if modified
-        if (trimmed.includes('API_TIMEOUT_MS=') && trimmed.startsWith('export ')) {
-          hasTimeout = true;
-          if (trimmed.includes(this.selectedConfig.timeout.toString())) {
-            newLines.push(trimmed.startsWith('#') ? trimmed.slice(1).trim() : trimmed);
-          } else {
-            newLines.push('#' + trimmed);
-            newLines.push(`export API_TIMEOUT_MS=${this.selectedConfig.timeout}`);
-          }
-          continue;
-        }
-
+        // Not a matching line, keep as is
         newLines.push(line);
       }
 
-      // If no API_TIMEOUT_MS found in file, add it
-      if (!hasTimeout) {
-        newLines.push(`export API_TIMEOUT_MS=${this.selectedConfig.timeout}`);
+      // Add any missing variables at the end (not as duplicates)
+      for (const [varName, varValue] of Object.entries(varsToSet)) {
+        if (!foundVars.has(varName)) {
+          newLines.push(`export ${varName}=${varValue}`);
+        }
       }
 
       fs.writeFileSync(this.configFilePath, newLines.join('\n'));
@@ -315,7 +335,7 @@ class ClaudeModelsTUI {
   async testConfiguration() {
     console.log('\n' + chalk.bold.cyan('Testing configuration...'));
 
-    const { baseUrl, authToken, model} = this.selectedConfig;
+    const { baseUrl, authToken, model, timeout } = this.selectedConfig;
 
     // Generate random integers for test
     const a = Math.floor(Math.random() * 100);
@@ -382,7 +402,7 @@ class ClaudeModelsTUI {
             'x-api-key': `${authToken}`,
             'anthropic-version': '2023-06-01'
           },
-          timeout: this.selectedConfig.timeout > 300000 ? 30000 : this.selectedConfig.timeout,
+          timeout: timeout > 300000 ? 30000 : timeout,
           responseType: 'stream'
         }
       );
@@ -398,12 +418,14 @@ class ClaudeModelsTUI {
           // Write raw response to file
           fs.writeFileSync('/tmp/test-response.txt', rawResponse);
           console.log(chalk.cyan('\nResponse saved to /tmp/test-response.txt'));
-          resolve(true);
+          // Return the HTTP status code (200 for successful response)
+          resolve(response.status);
         });
 
         response.data.on('error', (error) => {
           console.log(chalk.red(`\n✗ Stream error: ${error.message}`));
-          reject(error);
+          // Even with stream error, check if we got a 200 status initially
+          resolve(response?.status === 200 ? 200 : null);
         });
       });
 
@@ -414,13 +436,13 @@ class ClaudeModelsTUI {
         if (error.response.data) {
           console.log(chalk.red(error.response.data));
         }
-        return false;
+        return error.response.status;
       } else if (error.request) {
         console.log(chalk.red(`No response: ${error.message}`));
-        return false;
+        return null;
       } else {
         console.log(chalk.red(`Error: ${error.message}`));
-        return false;
+        return null;
       }
     }
   }
@@ -484,12 +506,12 @@ class ClaudeModelsTUI {
       console.log(chalk.cyan('Using default configuration options...'));
     }
     
-    let testSuccess = false;
-    while (!testSuccess) {
+    let testStatus = null;
+    while (testStatus !== 200) {
       await this.selectConfiguration();
-      testSuccess = await this.testConfiguration();
-      
-      if (!testSuccess) {
+      testStatus = await this.testConfiguration();
+
+      if (testStatus !== 200) {
         console.log(chalk.red('\n✗ Configuration test failed.'));
         const { retry } = await inquirer.prompt([
           {
@@ -499,7 +521,7 @@ class ClaudeModelsTUI {
             default: true
           }
         ]);
-        
+
         if (!retry) {
           console.log(chalk.cyan('Exiting...'));
           process.exit(1);
@@ -507,7 +529,7 @@ class ClaudeModelsTUI {
       }
     }
 
-    // Save selected config to file
+    // Save selected config to file only on successful test
     await this.saveConfigToFile();
 
     // If successful, start claude

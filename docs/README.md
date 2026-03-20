@@ -1,6 +1,6 @@
 # Claude Models TUI
 
-A Terminal User Interface (TUI) program to load, select, and test Claude API configurations from shell/text files.
+A Terminal User Interface (TUI) program to load, select, and test Claude API config from shell/text files.
 
 ## Features
 

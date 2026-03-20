@@ -1,16 +1,27 @@
 {
   "name": "claude-models",
-  "version": "1.0.0",
-  "description": "TUI program to load and test Claude API configurations",
+  "version": "1.0.2",
+  "description": "TUI program to load and test Claude API custom config",
   "main": "index.js",
   "bin": {
-    "claude-models": "./index.js"
+    "claude-models": "index.js"
   },
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": ["claude", "api", "tui", "configuration"],
-  "author": "",
+  "keywords": [
+    "claude",
+    "api",
+    "tui",
+    "configuration"
+  ],
+  "files": [
+    "index.js",
+    "AGENTS.md",
+    "package.json",
+    "claude-models.txt"
+  ],
+  "author": "qidu",
   "license": "MIT",
   "dependencies": {
     "inquirer": "^9.2.12",
