@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
@@ -498,11 +499,20 @@ class ClaudeModelsTUI {
     ]);
     
     const filePath = path.resolve(configFile);
-    this.configFilePath = filePath;
+    const homeFilePath = path.join(os.homedir(), configFile);
+
     if (fs.existsSync(filePath)) {
+      this.configFilePath = filePath;
       await this.loadConfigFile(filePath);
+    } else if (fs.existsSync(homeFilePath)) {
+      this.configFilePath = homeFilePath;
+      console.log(chalk.yellow(`⚠️ Config file not found in current directory: ${filePath}`));
+      console.log(chalk.cyan(`Using config file from home directory: ${homeFilePath}`));
+      await this.loadConfigFile(homeFilePath);
     } else {
+      this.configFilePath = filePath;
       console.log(chalk.yellow(`⚠️ Config file not found: ${filePath}`));
+      console.log(chalk.cyan(`Also checked home directory: ${homeFilePath}`));
       console.log(chalk.cyan('Using default configuration options...'));
     }
     

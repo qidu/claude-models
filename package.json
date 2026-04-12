@@ -1,7 +1,7 @@
 {
   "name": "claude-models",
-  "version": "1.0.2",
-  "description": "TUI program to load and test Claude API custom config",
+  "version": "1.0.3",
+  "description": "A TUI program to load and test custom llm provider for Claude Code",
   "main": "index.js",
   "bin": {
     "claude-models": "index.js"
